@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(*sanity dataset delete*)",
+      "Bash(*sanity dataset import*)",
+      "Bash(*sanity documents*)",
+      "Bash(*sanity deploy*)",
+      "Bash(*vercel deploy*)",
+      "Bash(*vercel --prod*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-commit-on-main.sh",
+            "statusMessage": "Checking branch..."
+          },
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-dependencies.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
